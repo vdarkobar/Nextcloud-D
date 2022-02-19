@@ -1,6 +1,6 @@
 # NextCloud 
   
-Login to <a href="https://dash.cloudflare.com/">CloudFlare</a> and set Domain name, or Domain name and Subdomain for your NextCloud.
+Login to <a href="https://dash.cloudflare.com/">CloudFlare</a> and set *Domain name*, or *Domain name* and *Subdomain* for your *NextCloud*.
 ```
     A | example.com | YOUR WAN IP
 ```
