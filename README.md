@@ -1,3 +1,8 @@
+<p align="left">
+  <a href="https://github.com/vdarkobar/npm">Home</a>
+  <br><br>
+</p> 
+  
 # NextCloud 
   
 Login to <a href="https://dash.cloudflare.com/">CloudFlare</a> and set *Domain name*, or *Domain name* and *Subdomain* for your *NextCloud*.
