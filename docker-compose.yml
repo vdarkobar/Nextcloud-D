@@ -1,0 +1,122 @@
+version: '3.9'
+
+networks:
+  nc:
+    name: nc
+    driver: bridge
+  db:
+    name: db
+    driver: bridge
+
+secrets:
+  mysql_root_password:
+    file: ./secrets/mysql_root_password.secret
+  nc_mysql_password:
+    file: ./secrets/nc_mysql_password.secret
+  nc_admin_user:
+    file: ./secrets/nc_admin_user.secret
+  nc_admin_password:
+    file: ./secrets/nc_admin_password.secret
+
+services:
+  db:
+    image: mariadb:latest
+    command: --skip-innodb-read-only-compressed
+    container_name: nextcloud-db # change for multiple instances
+    volumes:
+      - ./nextcloud-db-data:/var/lib/mysql
+    networks:
+      - db
+    restart: always
+    secrets: 
+      - mysql_root_password
+      - nc_mysql_password
+    environment:
+      - TZ=$TZ
+      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql_root_password
+      - MYSQL_DATABASE=db
+      - MYSQL_USER=dbuser
+      - MYSQL_PASSWORD_FILE=/run/secrets/nc_mysql_password
+
+  redis:
+    image: redis:latest
+    restart: always
+    networks:
+      - db
+      - nc
+    volumes:
+      - ./redis:/var/lib/redis
+
+  nextcloud:
+    depends_on:
+      - redis
+      - db
+    image: nextcloud:stable 
+    container_name: nextcloud # change for multiple instances
+    ports:
+      - $NCPORTN:80
+    secrets: 
+      - nc_mysql_password
+      - nc_admin_user
+      - nc_admin_password
+    volumes:
+      - ./files:/var/www/html
+    networks:
+      - nc
+      - db
+    restart: always
+
+    environment:
+      - REDIS_HOST=redis
+      - MYSQL_HOST=db:3306
+      - MYSQL_DATABASE=db
+      - MYSQL_USER=dbuser
+      - MYSQL_PASSWORD_FILE=/run/secrets/nc_mysql_password
+      - NEXTCLOUD_ADMIN_PASSWORD_FILE=/run/secrets/nc_admin_password
+      - NEXTCLOUD_ADMIN_USER_FILE=/run/secrets/nc_admin_user
+      - NEXTCLOUD_TRUSTED_DOMAINS=$SUBDOMAIN$DOMAINNAME $LOCALIP # space separated list
+
+  ## Collabora - Document Server
+  # Connect NextCloud to Collabora app with: https://code.DOMAINNAME
+  # Admin console at https://<office-domain>/loleaflet/dist/admin/admin.html
+  code:
+    container_name: code # change for multiple instances
+    image: collabora/code:latest
+    restart: always
+    networks:
+      - nc
+    ports:
+      - "9980:9980"
+#    security_opt:
+#      - no-new-privileges:true
+    cap_add:
+      - MKNOD
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - username=$MY_USERNAME
+      - password=$MY_PASSWORD
+      - domain=$SUBDOMAIN$DOMAINNAME #$MY_CODE_DOMAIN #<your-NEXTCLOUD-dot-escaped-domain>
+      - VIRTUAL_HOST=code.$DOMAINNAME
+      - LETSENCRYPT_HOST=code.$DOMAINNAME
+#      - server_name=code.$DOMAINNAME
+      - extra_params=--o:ssl.enable=false --o:ssl.termination=true
+
+# WatchTower - Automatic Docker Container Updates
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    restart: always
+    networks:
+      - nc
+      - db
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - TZ=$TZ
+      - WATCHTOWER_DEBUG=true
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_REMOVE_VOLUMES=true
+      - WATCHTOWER_INCLUDE_STOPPED=true
+      - WATCHTOWER_SCHEDULE=0 30 5 * * * # Everyday at 5:30
