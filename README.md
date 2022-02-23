@@ -29,7 +29,9 @@ Local IP Address, NextCloud Admin username,
 Collabora username, NextCloud Port Number.
 ```
   
-*Change Container names/Port numbers, if multiple instances are planed.*
+  
+*Change Container names/Port numbers, before executing docker-compose up -d, if multiple instances are planed.*  
+  
   
 ### *Run this command*:
 ```
