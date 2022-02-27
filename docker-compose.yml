@@ -89,7 +89,7 @@ services:
       - MYSQL_PASSWORD_FILE=/run/secrets/nc_mysql_password
       - NEXTCLOUD_ADMIN_PASSWORD_FILE=/run/secrets/nc_admin_password
       - NEXTCLOUD_ADMIN_USER_FILE=/run/secrets/nc_admin_user
-      - NEXTCLOUD_TRUSTED_DOMAINS=$SUBDOMAIN$DOMAINNAME $LOCALIP # space separated list
+      - NEXTCLOUD_TRUSTED_DOMAINS=$SUBDOMAIN$DOMAINNAME www.$DOMAINNAME $LOCALIP # space separated list
 
   # Collabora - Document Server
   # Connect NextCloud to Collabora app with: https://code.DOMAINNAME
