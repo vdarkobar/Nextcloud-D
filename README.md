@@ -13,6 +13,8 @@ Add subdomain *code* for Collabora Office:
 ```
     CNAME | code | @ (or example.com)
 ```
+no need to add A record (already set).
+  
 ---
   
 #### *Decide what you will use for*:
