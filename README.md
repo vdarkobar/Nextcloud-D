@@ -46,5 +46,4 @@ sudo docker logs -tf --tail="50" nextcloud
 sudo docker logs -tf --tail="50" code
 ``` 
   
-### Follow <i><a href="https://github.com/vdarkobar/NPM/blob/main/shared/NC%20Additional%20Settings.md">this link</a></i> for important NextCloud settings.  
-  
+### Follow <i><a href="https://github.com/vdarkobar/home-cloud/blob/main/shared/NC%20Additional%20Settings.md">this link</a></i> for important NextCloud settings.
