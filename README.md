@@ -13,7 +13,7 @@ Add subdomain *code* for Collabora Office:
 ```
     CNAME | code | @ (or example.com)
 ```
-*No need to add A record (already set by Argo Tunnel).*
+### *No need to add A record to put NextCloud on your Root Domain (already set by Argo Tunnel).*
   
 ---
   
