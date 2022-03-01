@@ -13,7 +13,7 @@ Add subdomain *code* for Collabora Office:
 ```
     CNAME | code | @ (or example.com)
 ```
-*No need to add A record (already set).*
+*No need to add A record (already set by Argo Tunnel).*
   
 ---
   
