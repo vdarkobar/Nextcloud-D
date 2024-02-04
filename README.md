@@ -5,12 +5,17 @@
   
 # NextCloud 
   
-Login to <a href="https://dash.cloudflare.com/">CloudFlare</a>, add *Subdomain* for your *NextCloud*. 
+Login to <a href="https://dash.cloudflare.com/">CloudFlare</a> and set Domain name, or Domain name and Subdomain for your NextCloud.
+```
+    A | example.com | YOUR WAN IP
+```
+or:
+```
+    A | example.com | YOUR WAN IP
+```
 ```
     CNAME | subdomain | @ (or example.com)
 ```
-#### *No need to add A record to put NextCloud on your Root Domain (already set by Argo Tunnel), just skip this step, including CNAME creation.*
-  
 Add subdomain *code* for Collabora Office:
 ```
     CNAME | code | @ (or example.com)
