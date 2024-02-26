@@ -31,7 +31,7 @@ Collabora username, NextCloud Port Number.
 ```
   
   
-*Change Container names/Port numbers, before executing docker-compose up -d for multiple instances.*  
+*Change Container names/Port numbers, before executing docker compose up -d for multiple instances.*  
   
   
 ### *Run this command*:
