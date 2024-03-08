@@ -113,10 +113,11 @@ while [[ $VALID_TZ -eq 0 ]]; do
     done
 done
 
-echo -ne "${RED}Enter Domain name: ${NC}"; read DNAME
-echo -ne "${RED}Enter Subdomain with . (dot) at the end, or just press Enter to default to Domain name: ${NC}"; read SDNAME
-echo -ne "${RED}Enter NextCloud Admin username: ${NC}"; read NCUNAME
-echo -ne "${RED}Enter Collabora username: ${NC}"; read CUNAME
+echo -ne "${GREEN}Enter Domain name: ${NC}"; read DNAME
+echo -ne "${GREEN}Enter Subdomain with . (dot) at the end, or just press Enter to default to Domain name: ${NC}"; read SDNAME
+echo -ne "${GREEN}Enter NextCloud Admin username: ${NC}"; read NCUNAME
+read -s -p "Enter Nextcloud admin password: " NAPASS
+echo -ne "${GREEN}Enter Collabora username: ${NC}"; read CUNAME
 echo -ne "${GREEN}Enter NextCloud Port Number(49152-65535):${NC} "; read NCPORTN;
 # Check if the port number is within the specified range
 while [[ $NCPORTN -lt 49152 || $NCPORTN -gt 65535 ]]; do
@@ -136,23 +137,23 @@ sed -i "s|05|${CUNAME}|" .env || { echo -e "${RED}Failed to update Collabora use
 sed -i "s|06|${NCPORTN}|" .env || { echo -e "${RED}Failed to update NextCloud Port Number in .env file.${NC}"; exit 1; }
 
 # Generate and store secrets, ensuring .secrets directory exists before generating secrets
-mkdir -p secrets || { echo -e "${RED}Failed to create secrets directory.${NC}"; exit 1; }
+mkdir -p .secrets || { echo -e "${RED}Failed to create secrets directory.${NC}"; exit 1; }
 
-echo $NCUNAME > secrets/nc_admin_user.secret || { echo -e "${RED}Failed to store NextCloud admin username.${NC}"; exit 1; }
-echo | openssl rand -base64 20 > secrets/nc_admin_password.secret || { echo -e "${RED}Failed to generate NextCloud admin password.${NC}"; exit 1; }
-TOKEN=$(openssl rand -base64 20); sed -i "s|CHANGE_ME|${TOKEN}|" .env || { echo -e "${RED}Failed to update .env with generated token.${NC}"; exit 1; }
-echo | openssl rand -base64 48 > secrets/mysql_root_password.secret || { echo -e "${RED}Failed to generate MySQL root password.${NC}"; exit 1; }
-echo | openssl rand -base64 20 > secrets/nc_mysql_password.secret || { echo -e "${RED}Failed to generate NextCloud MySQL password.${NC}"; exit 1; }
+echo $NCUNAME > .secrets/nc_admin_user.secret || { echo -e "${RED}Failed to store NextCloud admin username.${NC}"; exit 1; }
+echo $NAPASS > .secrets/nc_admin_password.secret || { echo -e "${RED}Failed to update .secret file with NextCloud admin password.${NC}"; exit 1; }
+sed -i "s|CHANGE_ME|${NAPASS}|" .env || { echo -e "${RED}Failed to update .env file with NextCloud admin password.${NC}"; exit 1; }
+echo | openssl rand -base64 48 > .secrets/mysql_root_password.secret || { echo -e "${RED}Failed to generate MySQL root password.${NC}"; exit 1; }
+echo | openssl rand -base64 20 > .secrets/nc_mysql_password.secret || { echo -e "${RED}Failed to generate NextCloud MySQL password.${NC}"; exit 1; }
 
 # Update permissions
-sudo chown -R root:root secrets/ && sudo chmod -R 600 secrets/ || { echo -e "${RED}Failed to update secrets directory permissions.${NC}"; exit 1; }
+sudo chown -R root:root .secrets/ && sudo chmod -R 600 .secrets/ || { echo -e "${RED}Failed to update secrets directory permissions.${NC}"; exit 1; }
 
 # Clean up, with checks for existence
 [[ -f README.md ]] && rm README.md
 
 # Main loop for docker compose up command
 while true; do
-    echo -ne "${GREEN}Execute 'docker-compose up -d' now? (yes/no) ${NC}"; read yn
+    echo -ne "${GREEN}Execute docker compose now? ${NC} (yes/no)"; read yn
     yn=$(echo "$yn" | tr '[:upper:]' '[:lower:]') # Convert input to lowercase
     case $yn in
         yes )
@@ -165,3 +166,17 @@ while true; do
         * ) echo -e "${RED}Please answer${NC} yes or no";;
     esac
 done
+
+
+#######
+# UFW #
+#######
+echo
+echo -e "${GREEN}Preparing firewall for local access...${NC}"
+sleep 0.5 # delay for 0.5 seconds
+echo
+
+# Use the PORTN variable for the UFW rule
+sudo ufw allow "${NCPORTN}/tcp" comment "Nexcloud custom port"
+sudo systemctl restart ufw
+echo
