@@ -104,7 +104,6 @@ while [[ $VALID_TZ -eq 0 ]]; do
     echo -e "${RED}Invalid Time Zone. Please enter a valid time zone (e.g., Europe/Berlin).${NC}"
     echo
     echo -ne "${GREEN}Enter Time Zone:${NC} "; read TZONE;
-    echo
     for tz in $TZONES; do
         if [[ "$TZONE" == "$tz" ]]; then
             VALID_TZ=1 # The entered time zone is valid
@@ -116,7 +115,8 @@ done
 echo -ne "${GREEN}Enter Domain name (e.g. example.com): ${NC}"; read DNAME
 echo -ne "${GREEN}Enter Subdomain with . (dot) at the end, or just press Enter to default to Domain name: ${NC}"; read SDNAME
 echo -ne "${GREEN}Enter NextCloud Admin username: ${NC}"; read NCUNAME
-echo -ne "${GREEN}Enter Nextcloud Admin password:: ${NC}"; read -s -p  NAPASS
+read -s -p "Enter Nextcloud Admin password: " NAPASS
+echo
 echo -ne "${GREEN}Enter Collabora username: ${NC}"; read CUNAME
 echo -ne "${GREEN}Enter NextCloud Port Number(49152-65535):${NC} "; read NCPORTN;
 # Check if the port number is within the specified range
