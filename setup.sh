@@ -205,8 +205,6 @@ LOCAL_DOMAIN="${HOSTNAME}${DOMAIN_LOCAL:+.$DOMAIN_LOCAL}"
 
 # Display access instructions
 echo
-echo -e "${GREEN} Use credentials:${NC}"
-echo
 echo -e "${GREEN} Local access:${NC} $LOCAL_IP:$NCPORTN"
 echo -e "${GREEN}             :${NC} $LOCAL_DOMAIN:$NCPORTN"
 echo
