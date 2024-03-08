@@ -26,7 +26,7 @@ Add subdomain *code* for Collabora Office:
 #### *Decide what you will use for*:
 ```
 Time Zone, Domain name, Subdomain (if planned),
-Local IP Address, NextCloud Admin username,
+NextCloud Admin username, NextCloud Admin password,
 Collabora username, NextCloud Port Number.
 ```
   
