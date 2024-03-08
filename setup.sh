@@ -113,18 +113,22 @@ while [[ $VALID_TZ -eq 0 ]]; do
 done
 
 echo -ne "${GREEN}Enter Domain name (e.g. example.com): ${NC}"; read DNAME
+echo
 echo -ne "${GREEN}Enter Subdomain with . (dot) at the end, or just press Enter to default to Domain name: ${NC}"; read SDNAME
+echo
 echo -ne "${GREEN}Enter NextCloud Admin username: ${NC}"; read NCUNAME
+echo
 read -s -p "Enter Nextcloud Admin password: " NAPASS
 echo
 echo -ne "${GREEN}Enter Collabora username: ${NC}"; read CUNAME
+echo
 echo -ne "${GREEN}Enter NextCloud Port Number(49152-65535):${NC} "; read NCPORTN;
 # Check if the port number is within the specified range
 while [[ $NCPORTN -lt 49152 || $NCPORTN -gt 65535 ]]; do
     echo -e "${RED}Port number is out of the allowed range. Please enter a number between 49152 and 65535.${NC}"
     echo -ne "${GREEN}Enter NPM Port Number(49152-65535):${NC} "; read NCPORTN;
 done
-
+echo
 # Get the primary local IP address of the machine more reliably
 LIP=$(ip route get 1.1.1.1 | awk '{print $7; exit}')
 
@@ -154,6 +158,7 @@ sudo chown -R root:root .secrets/ && sudo chmod -R 600 .secrets/ || { echo -e "$
 # Main loop for docker compose up command
 while true; do
     echo -ne "${GREEN}Execute docker compose now? ${NC} (yes/no)"; read yn
+    echo
     yn=$(echo "$yn" | tr '[:upper:]' '[:lower:]') # Convert input to lowercase
     case $yn in
         yes )
@@ -177,6 +182,32 @@ sleep 0.5 # delay for 0.5 seconds
 echo
 
 # Use the PORTN variable for the UFW rule
-sudo ufw allow "${NCPORTN}/tcp" comment "Nexcloud custom port"
+sudo ufw allow "${NCPORTN}/tcp" comment "Nextcloud custom port"
 sudo systemctl restart ufw
+echo
+
+
+##########
+# Access #
+##########
+echo -e "${GREEN}Access Nextcloud instance at${NC}"
+sleep 0.5 # delay for 0.5 seconds
+
+# Get the primary local IP address of the machine more reliably
+LOCAL_IP=$(ip route get 1.1.1.1 | awk '{print $7; exit}')
+# Get the short hostname directly
+HOSTNAME=$(hostname -s)
+# Use awk more efficiently to extract the domain name from /etc/resolv.conf
+DOMAIN_LOCAL=$(awk '/^search/ {print $2; exit}' /etc/resolv.conf)
+# Directly concatenate HOSTNAME and DOMAIN, leveraging shell parameter expansion for conciseness
+LOCAL_DOMAIN="${HOSTNAME}${DOMAIN_LOCAL:+.$DOMAIN_LOCAL}"
+
+# Display access instructions
+echo
+echo -e "${GREEN} Use credentials:${NC}"
+echo
+echo -e "${GREEN} Local access:${NC} $LOCAL_IP:$NCPORTN"
+echo -e "${GREEN}             :${NC} $LOCAL_DOMAIN:$NCPORTN"
+echo
+echo -e "${GREEN} External access:${NC} $SDNAME$DNAME"
 echo
