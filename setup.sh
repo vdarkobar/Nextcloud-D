@@ -113,10 +113,10 @@ while [[ $VALID_TZ -eq 0 ]]; do
     done
 done
 
-echo -ne "${GREEN}Enter Domain name: ${NC}"; read DNAME
+echo -ne "${GREEN}Enter Domain name (e.g. example.com): ${NC}"; read DNAME
 echo -ne "${GREEN}Enter Subdomain with . (dot) at the end, or just press Enter to default to Domain name: ${NC}"; read SDNAME
 echo -ne "${GREEN}Enter NextCloud Admin username: ${NC}"; read NCUNAME
-read -s -p "Enter Nextcloud admin password: " NAPASS
+echo -ne "${GREEN}Enter Nextcloud Admin password:: ${NC}"; read -s -p  NAPASS
 echo -ne "${GREEN}Enter Collabora username: ${NC}"; read CUNAME
 echo -ne "${GREEN}Enter NextCloud Port Number(49152-65535):${NC} "; read NCPORTN;
 # Check if the port number is within the specified range
