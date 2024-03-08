@@ -144,7 +144,8 @@ sed -i "s|06|${NCPORTN}|" .env || { echo -e "${RED}Failed to update NextCloud Po
 mkdir -p .secrets || { echo -e "${RED}Failed to create secrets directory.${NC}"; exit 1; }
 
 echo $NCUNAME > .secrets/nc_admin_user.secret || { echo -e "${RED}Failed to store NextCloud admin username.${NC}"; exit 1; }
-echo $NAPASS > .secrets/nc_admin_password.secret || { echo -e "${RED}Failed to update .secret file with NextCloud admin password.${NC}"; exit 1; }
+echo $NAPASS > .secrets/nc_admin_password.secret || { echo -e "${RED}Failed to store NextCloud admin password.${NC}"; exit 1; }
+echo $CUNAME > .secrets/collabora_admin_user.secret || { echo -e "${RED}Failed to store Collabora admin username.${NC}"; exit 1; }
 sed -i "s|CHANGE_ME|${NAPASS}|" .env || { echo -e "${RED}Failed to update .env file with NextCloud admin password.${NC}"; exit 1; }
 echo | openssl rand -base64 48 > .secrets/mysql_root_password.secret || { echo -e "${RED}Failed to generate MySQL root password.${NC}"; exit 1; }
 echo | openssl rand -base64 20 > .secrets/nc_mysql_password.secret || { echo -e "${RED}Failed to generate NextCloud MySQL password.${NC}"; exit 1; }
