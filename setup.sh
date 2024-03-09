@@ -54,6 +54,7 @@ while true; do
 
         # Execute first command and echo -e message when done
         echo
+        clear
         echo -e "${GREEN} Executing script... ${NC}"
         echo
         break
@@ -65,6 +66,7 @@ while true; do
 
     # If user entered anything else, ask them to correct it
     else
+        echo
         echo -e "${YELLOW} Invalid input. Please enter${NC} 'yes' or 'no'"
     fi
 done
@@ -136,7 +138,7 @@ check_exit_status $? "Docker installation might have issues."
 
 clear
 echo
-echo -e "${GREEN}Docker and Docker Compose(v2) installation completed.${NC}"
+echo -e "${GREEN}Docker and Docker Compose(v2) installation completed successfully.${NC}"
 echo
 
 
@@ -217,7 +219,7 @@ sudo chown -R root:root .secrets/ && sudo chmod -R 600 .secrets/ || { echo -e "$
 
 # Main loop for docker compose up command
 while true; do
-    echo -ne "${GREEN}Execute docker compose now? ${NC} (yes/no)"; read yn
+    echo -ne "${GREEN}Execute docker compose now?${NC} (yes/no) "; read yn
     echo
     yn=$(echo "$yn" | tr '[:upper:]' '[:lower:]') # Convert input to lowercase
     case $yn in
@@ -273,3 +275,13 @@ echo
 echo
 echo -e "${GREEN} Set Collabora Office url in the Nextcloud office app:${NC} https://code.$DNAME"
 echo
+
+
+#####################################
+# Remove the Script from the system #
+#####################################
+echo
+echo -e "${RED} This Script Will Self Destruct!${NC}"
+echo
+# VERY LAST LINE OF THE SCRIPT:
+sudo rm "$0"
