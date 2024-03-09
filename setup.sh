@@ -274,6 +274,7 @@ echo -e "${GREEN} External access:${NC} $SDNAME$DNAME"
 echo
 echo
 echo -e "${GREEN} Set Collabora Office url in the Nextcloud office app:${NC} https://code.$DNAME"
+echo -e "${RED} Configure Reverse proxy (NPM) for external access.${NC}"
 echo
 
 
