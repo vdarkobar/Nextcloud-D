@@ -38,7 +38,36 @@ echo -e "${GREEN} Decide what you will use for:${NC}"
 echo
 echo "      - Time Zone, NextCloud Admin username, NextCloud Admin password, NextCloud Port Number."
 echo
+echo
 
+while true; do
+    echo -e "${GREEN} Continue? ${NC} (yes/no)"
+    echo
+    read choice
+    echo
+
+    # Convert choice to lowercase
+    choice=${choice,,} # This makes the script case insensitive
+
+    # Check if user entered "yes"
+    if [[ "$choice" == "yes" || "$choice" == "y" ]]; then
+
+        # Execute first command and echo -e message when done
+        echo
+        echo -e "${GREEN} Executing script... ${NC}"
+        echo
+        break
+
+    # If user entered "no"
+    elif [[ "$choice" == "no" || "$choice" == "n" ]]; then
+        echo -e "${RED} Aborting script. ${NC}"
+        exit
+
+    # If user entered anything else, ask them to correct it
+    else
+        echo -e "${YELLOW} Invalid input. Please enter${NC} 'yes' or 'no'"
+    fi
+done
 
 ###########################################
 # Function for displaying status messages #
