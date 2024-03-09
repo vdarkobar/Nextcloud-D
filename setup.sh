@@ -11,6 +11,35 @@ RED='\033[0;31m'
 NC='\033[0m'
 
 
+#################
+# Intro message #
+#################
+
+echo
+echo -e "${GREEN} Before you begin:${NC}"
+echo
+echo -e "${GREEN} Login to${NC} CloudFlare ${GREEN}and set Domain name, or Domain name and Subdomain for your NextCloud:${NC}"
+echo
+echo "        A   | example.com | YOUR WAN IP"
+echo
+echo -e "${GREEN} or:${NC}"
+echo
+echo "        A   | example.com | YOUR WAN IP"
+echo
+echo "      CNAME |  subdomain  | @ (or example.com)"
+echo
+echo
+echo -e "${GREEN} Add subdomain${NC} code ${GREEN}for Collabora Office:${NC}"
+echo
+echo "      CNAME |     code    | @ (or example.com)"
+echo
+echo 
+echo -e "${GREEN} Decide what you will use for:${NC}"
+echo
+echo "      - Time Zone, NextCloud Admin username, NextCloud Admin password, NextCloud Port Number."
+echo
+
+
 ###########################################
 # Function for displaying status messages #
 ###########################################
@@ -120,6 +149,7 @@ echo -ne "${GREEN}Enter NextCloud Admin username: ${NC}"; read NCUNAME
 echo
 read -s -p "Enter Nextcloud Admin password: " NAPASS
 echo
+echo
 echo -ne "${GREEN}Enter Collabora username: ${NC}"; read CUNAME
 echo
 echo -ne "${GREEN}Enter NextCloud Port Number(49152-65535):${NC} "; read NCPORTN;
@@ -191,6 +221,7 @@ echo
 ##########
 # Access #
 ##########
+clear
 echo -e "${GREEN}Access Nextcloud instance at${NC}"
 sleep 0.5 # delay for 0.5 seconds
 
@@ -209,4 +240,7 @@ echo -e "${GREEN} Local access:${NC} $LOCAL_IP:$NCPORTN"
 echo -e "${GREEN}             :${NC} $LOCAL_DOMAIN:$NCPORTN"
 echo
 echo -e "${GREEN} External access:${NC} $SDNAME$DNAME"
+echo
+echo
+echo -e "${GREEN} Set Collabora Office url in the Nextcloud office app:${NC} https://code.$DNAME"
 echo
