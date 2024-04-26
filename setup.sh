@@ -680,7 +680,7 @@ mkdir -p "$HOME/nextcloud" "$HOME/nextcloud/.secrets" || { echo -e "${RED} Faile
 echo -e "${GREEN} Created directories: 'nextcloud', 'nextcloud/.secrets'${NC}"
 
 # Set the WORK_DIR variable
-$WORK_DIR=$HOME/nextcloud
+WORK_DIR=$HOME/nextcloud
 
 echo
 echo -e "${GREEN} Working directory:${NC} $WORK_DIR"
