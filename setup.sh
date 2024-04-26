@@ -82,14 +82,13 @@ echo
 echo "        A   | example.com | YOUR WAN IP"
 echo "      CNAME |  subdomain  | @ (or example.com)"
 echo
-echo
 echo -e "${GREEN} Add subdomain${NC} code ${GREEN}for${NC} Collabora Office"
 echo
 echo "      CNAME |     code    | @ (or example.com)"
 echo
-echo
 
 echo -e "${GREEN} Decide what you will use for: ${NC}"
+echo
 echo -e " - Public Key to configure your SSH access to container"
 echo -e " - Time Zone"
 echo -e " - User name and Password for Nextcloud Admin user"
@@ -478,7 +477,6 @@ fi
 
 # Ask the user for the public key
 while true; do
-    echo
     echo -e "${YELLOW} Please enter your public SSH key:${NC}"
     echo
     read public_key
@@ -509,7 +507,7 @@ echo
 # Locking root account password #
 #################################
 
-echo -e "${GREEN}Locking root account password...${NC}"
+echo -e "${GREEN} Locking root account password...${NC}"
 echo
 
 # Attempt to lock the root account password
@@ -633,7 +631,6 @@ echo
 # Stops the automatic updates temporarily, allowing install to proceed
 sudo systemctl stop unattended-upgrades
 
-echo
 echo -e "${GREEN} Starting the installation of Docker and Docker Compose (v2)...${NC}"
 echo
 
@@ -903,7 +900,7 @@ echo
 #############
 
 # Prompt user for input
-echo -ne "${GREEN}Enter Time Zone (e.g. Europe/Berlin):${NC} "; read TZONE;
+echo -ne "${GREEN} Enter Time Zone (e.g. Europe/Berlin):${NC} "; read TZONE;
 echo
 # Check if the entered time zone is valid
 TZONES=$(timedatectl list-timezones) # Get list of time zones
@@ -917,9 +914,9 @@ done
 
 # Prompt user until a valid time zone is entered
 while [[ $VALID_TZ -eq 0 ]]; do
-    echo -e "${RED}Invalid Time Zone. Please enter a valid time zone (e.g., Europe/Berlin).${NC}"
+    echo -e "${RED} Invalid Time Zone. Please enter a valid time zone (e.g., Europe/Berlin).${NC}"
     echo
-    echo -ne "${GREEN}Enter Time Zone:${NC} "; read TZONE;
+    echo -ne "${GREEN} Enter Time Zone:${NC} "; read TZONE;
     for tz in $TZONES; do
         if [[ "$TZONE" == "$tz" ]]; then
             VALID_TZ=1 # The entered time zone is valid
@@ -956,14 +953,15 @@ sed -i "s|03|${SDNAME}|" $WORK_DIR/.env || { echo -e "${RED} Failed to update Su
 sed -i "s|04|${LIP}|" $WORK_DIR/.env || { echo -e "${RED} Failed to update Local IP Address in .env file.${NC}"; exit 1; }
 sed -i "s|05|${CUNAME}|" $WORK_DIR/.env || { echo -e "${RED} Failed to update Collabora username in .env file.${NC}"; exit 1; }
 sed -i "s|06|${NCPORTN}|" $WORK_DIR/.env || { echo -e "${RED} Failed to update NextCloud Port Number in .env file.${NC}"; exit 1; }
+sed -i "s|07|${NAPASS}|" $WORK_DIR/.env || { echo -e "${RED} Failed to update .env file with NextCloud admin password.${NC}"; exit 1; }
 
 # Generate and store secrets, ensuring .secrets directory exists before generating secrets
-mkdir -p $WORK_DIR/.secrets || { echo -e "${RED}Failed to create secrets directory.${NC}"; exit 1; }
+mkdir -p $WORK_DIR/.secrets || { echo -e "${RED} Failed to create secrets directory.${NC}"; exit 1; }
 
 echo $NCUNAME > $WORK_DIR/.secrets/nc_admin_user.secret || { echo -e "${RED} Failed to store NextCloud admin username.${NC}"; exit 1; }
 echo $NAPASS > $WORK_DIR/.secrets/nc_admin_password.secret || { echo -e "${RED} Failed to store NextCloud admin password.${NC}"; exit 1; }
 echo $CUNAME > $WORK_DIR/.secrets/collabora_admin_user.secret || { echo -e "${RED} Failed to store Collabora admin username.${NC}"; exit 1; }
-sed -i "s|CHANGE_ME|${NAPASS}|" $WORK_DIR/.env || { echo -e "${RED} Failed to update .env file with NextCloud admin password.${NC}"; exit 1; }
+
 echo | openssl rand -base64 48 > $WORK_DIR/.secrets/mysql_root_password.secret || { echo -e "${RED} Failed to generate MySQL root password.${NC}"; exit 1; }
 echo | openssl rand -base64 20 > $WORK_DIR/.secrets/nc_mysql_password.secret || { echo -e "${RED} Failed to generate NextCloud MySQL password.${NC}"; exit 1; }
 
@@ -1014,9 +1012,6 @@ fi
 # Access #
 ##########
 
-echo -e "${GREEN}Access Nextcloud instance at${NC}"
-sleep 0.5 # delay for 0.5 seconds
-
 # Get the short hostname directly
 HOSTNAME=$(hostname -s)
 
@@ -1056,6 +1051,10 @@ fi
 # Directly concatenate HOSTNAME and DOMAIN, leveraging shell parameter expansion for conciseness
 LOCAL_DOMAIN="${HOSTNAME}${DOMAIN_LOCAL:+.$DOMAIN_LOCAL}"
 
+echo
+echo -e "${GREEN} Access Nextcloud instance at${NC}"
+sleep 0.5 # delay for 0.5 seconds
+
 # Display access instructions
 echo
 echo -e "${GREEN} Local access:${NC} $LOCAL_IP:$NCPORTN"
@@ -1065,6 +1064,7 @@ echo -e "${GREEN} External access:${NC} $SDNAME$DNAME"
 echo
 echo
 echo -e "${GREEN} Set Collabora Office url in the Nextcloud office app:${NC} https://code.$DNAME"
+echo
 echo -e "${RED} Configure Reverse proxy (NPM) for external access.${NC}"
 echo
 
